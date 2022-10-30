@@ -6,6 +6,7 @@ public class movment : MonoBehaviour
 {
     [SerializeField] float mainThrust = 100;
     [SerializeField] float rotationThrust = 1f;
+    [SerializeField] ParticleSystem mainEngineParicles; 
 
     Rigidbody rb;
 
@@ -27,9 +28,22 @@ public class movment : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            rb.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
+            StartThrusting();
+        }
+        else
+        {
+            mainEngineParicles.Stop();
         }
 
+    }
+
+     void StartThrusting()
+    {
+        rb.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
+        if (!mainEngineParicles.isPlaying)
+        {
+            mainEngineParicles.Play();
+        }
     }
 
     void ProcessRotation()
@@ -42,6 +56,7 @@ public class movment : MonoBehaviour
         {
             ApplyRotation(-rotationThrust);
         }
+        
     }
 
     void ApplyRotation(float rotationThisFrame)

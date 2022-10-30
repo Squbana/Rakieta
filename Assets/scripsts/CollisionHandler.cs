@@ -6,10 +6,18 @@ using UnityEngine.SceneManagement;
 public class CollisionHandler : MonoBehaviour
 {
     [SerializeField] float levelLoadDelay = 2f;
+    [SerializeField] ParticleSystem successParicle;
+    [SerializeField] ParticleSystem crashParticle;
+
+    bool isTransitioning = false; 
 
 
     private void OnCollisionEnter(Collision other)
     {
+      if (isTransitioning)
+        {
+            return;
+        }
       switch (other.gameObject.tag)
         {
             case "Friendly":
@@ -43,12 +51,16 @@ public class CollisionHandler : MonoBehaviour
 
     void StartCrashSequency()
     {
+        isTransitioning = true;
+        successParicle.Play();
         GetComponent<movment>().enabled = false;
         Invoke ("ReloadLevel",levelLoadDelay);
     }
 
     void StartSuccessSequency()
     {
+        isTransitioning = true;
+        crashParticle.Play();
         GetComponent<movment>().enabled = false;
         Invoke("LoadNextLevel", levelLoadDelay);
     }
